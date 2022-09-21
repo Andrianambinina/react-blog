@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 
@@ -20,15 +20,18 @@ router.put("/:id", async (req, res) => {
 
         if (post.username === req.body.username) {
             try {
-                const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true});
+                const updatedPost = await Post.findByIdAndUpdate(
+                    req.params.id,
+                    { $set: req.body },
+                    { new: true }
+                );
                 res.status(200).json(updatedPost);
             } catch (err) {
                 res.status(500).json(err);
             }
         } else {
-            res.status(401).json("You can update only your post")
+            res.status(401).json("You can update only your post");
         }
-
     } catch (err) {
         res.status(500).json(err);
     }
@@ -36,20 +39,20 @@ router.put("/:id", async (req, res) => {
 
 // DELETE POST
 router.delete("/:id", async (req, res) => {
-    if (req.body.postId === req.params.id) {
-        try {
-            const post = await Post.findById(req.params.id);
+    try {
+        const post = await Post.findById(req.params.id);
+        if (post.username == req.body.username) {
             try {
                 await post.delete();
                 res.status(200).json("Post has been deleted ...");
             } catch (err) {
-                res.status(500).json(err);
+                res.stattus(500).json(err);
             }
-        } catch (err) {
-            res.status(404).json("User not found");
+        } else {
+            res.status(401).json("You can delete only your post");
         }
-    } else {
-        res.status(401).json("You can delete only your account");
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 
@@ -57,7 +60,7 @@ router.delete("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        const {password, ...others} = post._doc;
+        const { password, ...others } = post._doc;
         res.status(200).json(others);
     } catch (err) {
         res.status(500).json(err);
@@ -71,9 +74,9 @@ router.get("/", async (req, res) => {
     try {
         let posts;
         if (username) {
-            posts = await Post.find({username});
+            posts = await Post.find({ username });
         } else if (catName) {
-            posts = await Post.find({categories: {$in: [catName]}});
+            posts = await Post.find({ categories: { $in: [catName] } });
         } else {
             posts = await Post.find();
         }

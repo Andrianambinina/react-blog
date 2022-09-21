@@ -1,34 +1,27 @@
 import "./post.css";
+import { Link } from "react-router-dom";
 
-const Post = () => {
+const Post = ({ post }) => {
+    const public_folder = "http://localhost:5000/images/";
+
     return (
         <div className="post">
-            <img className="postImg" src="https://images.pexels.com/photos/4224268/pexels-photo-4224268.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt=""/>
+            {post.photo && <img className="postImg" src={public_folder + post.photo} alt="" />}
             <div className="postInfo">
                 <div className="postCats">
-                    <span className="postCat">Music</span>
-                    <span className="postCat">Life</span>
+                    {post.categories.map((category) => (
+                        <span className="postCat">{category.name}</span>
+                    ))}
                 </div>
-                <span className="postTitle">
-                    Lorem ipsum dolor sit amet
+                <Link to={`/post/${post._id}`}>
+                    <span className="postTitle">{post.title}</span>
+                </Link>
+                <hr />
+                <span className="postDate">
+                    {new Date(post.createdAt).toLocaleDateString()}
                 </span>
-                <hr/>
-                <span className="postDate">1 hour ago</span>
             </div>
-            <p className="postDescription">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Alias architecto aspernatur, at consequatur, earum fugiat hic odio odit officia quasi quod sint, sunt
-                tempora veritatis vero voluptas voluptate. Veniam, voluptatibus!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Alias architecto aspernatur, at consequatur, earum fugiat hic odio odit officia quasi quod sint, sunt
-                tempora veritatis vero voluptas voluptate. Veniam, voluptatibus!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Alias architecto aspernatur, at consequatur, earum fugiat hic odio odit officia quasi quod sint, sunt
-                tempora veritatis vero voluptas voluptate. Veniam, voluptatibus!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Alias architecto aspernatur, at consequatur, earum fugiat hic odio odit officia quasi quod sint, sunt
-                tempora veritatis vero voluptas voluptate. Veniam, voluptatibus!
-            </p>
+            <p className="postDescription">{post.description}</p>
         </div>
     );
 };
